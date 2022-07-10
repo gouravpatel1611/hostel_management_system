@@ -33,4 +33,14 @@ urlpatterns = [
     path('forget_pass', views.forget_pass, name='forget_pass'),
     path('forgeted', views.forgeted, name='forgeted'),
     
+
+
+
+
+    path('scan_for_outing', views.scan_for_outing, name='scan_for_outing'),
+
+    path('check_qr', views.check_qr, name='check_qr'),
+
+
+
 ]

@@ -637,7 +637,6 @@ def gatepass_view(request):
 def forget_pass(request):
     if request.method == 'POST':
         data = request.POST['data']
-        print(data)
         return render(request, 'forget.html',{'data':data})
     else:
         return render(request, "index.html")
@@ -678,4 +677,30 @@ def forgeted(request):
     else:
         return render(request, "index.html")
    
+    
+    
+def scan_for_outing(request):
+    if request.method == 'POST':
+        username = request.POST['guard_username']
+        data = {'username': username, 'status':'OUT','title':'Scan For Outing'}
+        return render(request, "scaner.html",{'data':data})
+    else:
+        return render(request, "index.html")
+    
+    
+def check_qr(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        status = request.POST['status']
+        qr_code = request.POST['qr_code']
+
+        data = Gatepass.objects.get(hex_code=qr_code)
+        if status == "OUT":
+                data.out_time= datetime.now().strftime("%I:%M-%p")
+                data.status = "OUT"
+                data.save()
+                return HttpResponse(status)
+
+    else:
+        return render(request, "index.html")
     
