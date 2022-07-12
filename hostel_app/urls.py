@@ -30,6 +30,8 @@ urlpatterns = [
     path('uname_gatepass', views.uname_gatepass, name='uname_gatepass'),
     path('gatepass', views.gatepass, name='gatepass'),
     path('gatepass_issue', views.gatepass_issue, name='gatepass_issue'),
+    path('gatepass_view', views.gatepass_view, name='gatepass_view'),
+
     path('forget_pass', views.forget_pass, name='forget_pass'),
     path('forgeted', views.forgeted, name='forgeted'),
     
@@ -38,6 +40,8 @@ urlpatterns = [
 
 
     path('scan_for_outing', views.scan_for_outing, name='scan_for_outing'),
+    path('scan_for_entry', views.scan_for_entry, name='scan_for_entry'),
+    path('guard_gatepass', views.guard_gatepass, name='guard_gatepass'),
 
     path('check_qr', views.check_qr, name='check_qr'),
 

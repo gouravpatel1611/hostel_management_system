@@ -588,7 +588,6 @@ def gatepass_issue(request):
             input_date=input_date,
             region= region,
             issue_date=issue_date,
-            status= "OUT"
             # out_time= datetime.now().strftime("%I:%M-%p"),
         )
         gatepass_data.save()
@@ -623,13 +622,22 @@ def gatepass_issue(request):
 def gatepass_view(request):
     if request.method == 'POST':
         username = request.POST['student_username']
-        std_data = Student_data.objects.get(username=username)
-        if std_data.status == "OUT":
-            pass_no = std_data.gate_pass_no
-            data = Gatepass.objects.get(id=int(pass_no))
-            return render(request, "pass_view.html", {'data':data,'img':data.id})
-        else:
-            return render(request, "no_pass.html")
+        try:
+            std_data = Student_data.objects.get(username=username)
+            if std_data.status == "OUT":
+                pass_no = std_data.gate_pass_no
+                data = Gatepass.objects.get(id=int(pass_no))
+                if data.status == "OUT":
+                    title = "Out OF Hostel"
+                else:
+                    title = "Gatepass View"
+                return render(request, "pass_view.html", {'data':data,'img':data.id,'title':title})
+            else:
+                content = {'title':"Gatepass View",'text':"Currently Gatepass Not Availavle",'img':"no_pass.png"}
+                return render(request, "error.html" ,{'data':content})
+        except:
+            content = {'title':"Gatepass View",'text':"Currently Gatepass Not Availavle",'img':"no_pass.png"}
+            return render(request, "error.html" ,{'data':content})
     else:
         return render(request, "index.html")
     
@@ -688,19 +696,72 @@ def scan_for_outing(request):
         return render(request, "index.html")
     
     
+   
+    
+    
+def scan_for_entry(request):
+    if request.method == 'POST':
+        username = request.POST['guard_username']
+        data = {'username': username, 'status':'IN','title':'Scan For Entry'}
+        return render(request, "scaner.html",{'data':data})
+    else:
+        return render(request, "index.html")
+    
+    
 def check_qr(request):
     if request.method == 'POST':
         username = request.POST['username']
         status = request.POST['status']
         qr_code = request.POST['qr_code']
-
-        data = Gatepass.objects.get(hex_code=qr_code)
-        if status == "OUT":
-                data.out_time= datetime.now().strftime("%I:%M-%p")
-                data.status = "OUT"
-                data.save()
-                return HttpResponse(status)
-
+        
+        if status == "IN":
+            txt = "Entry"
+        else :
+            txt = "Outing"
+        try: 
+            data = Gatepass.objects.get(hex_code=qr_code)
+            if data.status == status :
+                context = {'title':"Error on Scaning",'text':"Go to another Scan"}
+                return render(request, "error.html",{'data':context})
+            else:
+                return  render(request, "guard_gatepaass.html",{'data':data,'title':f'Submit Data for {txt}',"submit":True})
+        except:
+            context = {'title':"QR Code Scan",'text':"Error! QR Code Not Match"}
+            return render(request, "error.html",{'data':context})
+       
+            
     else:
         return render(request, "index.html")
     
+    
+    
+def guard_gatepass(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        status = request.POST['status']
+        qr_code = request.POST['hex_code']
+        
+        data = Gatepass.objects.get(hex_code=qr_code)
+        student_data = Student_data.objects.get(gate_pass_no=str(data.id))
+        if status == "IN":
+            title = "Outing Sucsessfull !"
+            
+            data.out_date = datetime.now().strftime("%d-%m-%Y")
+            data.out_time = datetime.now().strftime("%I:%M-%p")
+            data.status = "OUT"
+            student_data.status = "OUT"
+            
+        elif status == "OUT":
+            title = "Entry Sucsessfull !"
+            
+            data.in_date = datetime.now().strftime("%d-%m-%Y")
+            data.in_time = datetime.now().strftime("%I:%M-%p")
+            data.hex_code = f'{data.hex_code}-done'
+            data.status = "IN"
+            student_data.status = "IN"
+            student_data.gate_pass_no = "NO"
+        student_data.save()
+        data.save()
+        return render(request, "guard_gatepaass.html",{'data':data,'title':title,"submit":False})
+    else:
+        return render(request, "index.html")

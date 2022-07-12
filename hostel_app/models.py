@@ -76,10 +76,11 @@ class Gatepass(models.Model):
     region = models.CharField(max_length=50,null=False)
     issue_date = models.DateTimeField()
     out_time = models.CharField(max_length=20,default=" ",null=True)
+    out_date = models.CharField(max_length=20,default="not-set",null=True)
     in_time = models.CharField(max_length=20,default=" ",null=True)
+    in_date = models.CharField(max_length=20,default="not-set",null=True)
     status = models.CharField(max_length=10,default="IN")
     hex_code = models.CharField(max_length=500,default=" ")
-    
     
     def __str__(self):
         return self.name

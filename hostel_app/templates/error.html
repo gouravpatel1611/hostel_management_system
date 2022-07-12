@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gatepass View</title>
+    <title>Gatepass</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
@@ -26,7 +26,7 @@
 <body>
 
     <div class="title">
-        <h2>Gatepass View</h2>
+        <h2>{{data.title}}</h2>
     </div>
 
     <section style="background-color: #eee;">
@@ -39,7 +39,7 @@
                         <div class="card-body text-center">
                             <img src="../static/qr_code/no_pass.png"
                                 alt="avatar" class=" img-fluid" style="width: 100%;">
-                            <h5 class="my-3">Currently Gatepass Not Availavle </h5>
+                            <h5 class="my-3">{{data.text}} </h5>
                         </div>
                     </div>
                 </div>

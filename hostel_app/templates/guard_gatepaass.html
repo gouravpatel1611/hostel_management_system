@@ -10,18 +10,32 @@
 </head>
 
 <style>
-    .title{
-  padding: 1rem;
-  font-style: bold;
-  color: yellow;
-  background-color: #04AA6D;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  max-height: min-content;
-}
+    .title {
+        padding: 1rem;
+        font-style: bold;
+        color: yellow;
+        background-color: #04AA6D;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        max-height: min-content;
+    }
 </style>
+
+{% if submit %}
+<style>
+    .hide {
+        display: none;
+    }
+</style>
+{% else %}
+<style>
+    .hide2 {
+        display: none;
+    }
+</style>
+{% endif %}
 
 <body>
 
@@ -31,18 +45,19 @@
 
     <section style="background-color: #eee;">
         <div class="container py-5">
-            
+
 
             <div class="row">
-                <div class="col-lg-4">
+                {% load static %}
+                <div class="col-lg-4 hide">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <img src="../static/qr_code/{{img}}.png"
-                                alt="avatar" class=" img-fluid" style="width: 100%;">
+                            <img src="{%static 'hostel_app/sucsess.png' %}" alt="avatar"
+                                class="rounded-circle img-fluid" style="width: 150px;">
                             <h5 class="my-3">{{data.username}} </h5>
                         </div>
                     </div>
-                   
+
                 </div>
                 <div class="col-lg-8">
                     <div class="card mb-4">
@@ -83,35 +98,43 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
+                            <div class="row hide">
                                 <div class="col-sm-3">
-                                    <p class="mb-0"> <b>Date</b></p>
+                                    <p class="mb-0"> <b>Out-Date</b></p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{data.input_date}}</p>
+                                    <p class="text-muted mb-0">{{data.out_date}}</p>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
+                            <hr class="row hide">
+                            <div class="row hide">
                                 <div class="col-sm-3">
-                                    <p class="mb-0"> <b>Outing Date & Time</b></p>
+                                    <p class="mb-0"> <b>Out-time</b></p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{data.out_date}} , {{data.out_time}}</p>
+                                    <p class="text-muted mb-0">{{data.out_time}}</p>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
+                            <hr class="row hide">
+                            <div class="row hide">
                                 <div class="col-sm-3">
-                                    <p class="mb-0"> <b>Entry Date & Time</b></p>
+                                    <p class="mb-0"> <b>IN-Date</b></p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{data.in_date}} , {{data.in_time}}</p>
+                                    <p class="text-muted mb-0">{{data.in_date}}</p>
                                 </div>
                             </div>
-                            <hr>
-
-                            <div class="row">
+                            <hr class="row hide">
+                            <div class="row hide">
+                                <div class="col-sm-3">
+                                    <p class="mb-0"> <b>IN-Time</b></p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{{data.in_time}}</p>
+                                </div>
+                            </div>
+                            <hr class="hide">
+                            <div class="row ">
                                 <div class="col-sm-3">
                                     <p class="mb-0"> <b>Region</b></p>
                                 </div>
@@ -124,17 +147,24 @@
 
 
 
-                            <div class="row">
-                                <!-- <form > -->
-                                    <button type="button" onClick="history.back()" class="btn btn-success"> Done </button>
-                                <!-- </form> -->
+                            <div class="row hide " >
+                                <button type="button" onClick="history.go(-3)" class= "btn btn-success" >Done</button>
                             </div>
+
+                            <form class="row hide2 " method="post" action="/guard_gatepass">
+                                {% csrf_token %}
+                                <input type="hidden" name="username" value="{{data.username}}">
+                                <input type="hidden" name="status" value="{{data.status}}">
+                                <input type="hidden" name="hex_code" value="{{data.hex_code}}">
+                                <button type="submit" class="btn btn-success"> Submit </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
 
 
 

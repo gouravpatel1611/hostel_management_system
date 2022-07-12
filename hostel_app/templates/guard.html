@@ -184,7 +184,7 @@ body {
             </a>
           </form>
           
-          <form class="card card-2" action="#" method="post"> {% csrf_token%}
+          <form class="card card-2" action="/scan_for_entry" method="post"> {% csrf_token%}
             <input type="hidden" name="guard_username" value= {{guard_username}} />
             <a href="#" onclick="this.parentNode.submit()">
               <h2 class="card__title">Scan for Entry</h2>
