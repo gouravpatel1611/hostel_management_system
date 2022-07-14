@@ -1,13 +1,12 @@
 from django.shortcuts import render , HttpResponse , HttpResponseRedirect
 from .models import Admin_pass , Student_data ,Student_pass , Guard_data ,Guard_pass, Admin_data,Gatepass
 import json
+import array
 from django.core.mail import send_mail
 from datetime import datetime , date
 import random
-import array
 from django.contrib import messages
 import qrcode
-import cv2
 import os
 # Create your views here.
 
@@ -250,7 +249,7 @@ def addstudent(request):
                                     password=std_password)
             std_pass.save()
             try:
-                email_send(student_email, student_name, username, std_password,'Lcit Hostel Ragistation Sucsessfull')
+                    email_send(student_email, student_name, username, std_password,'Lcit Hostel Ragistation Sucsessfull')
             except:
                 pass
             
@@ -382,7 +381,6 @@ def addadmin(request):
         chk_no = 0
         for i in all_data:
             chk_no += 1
-        print("------------------", str(post_chk_no)  , str(chk_no))  
         if str(post_chk_no)  != str(chk_no):
             admin_data = {'admin': admin_name}
             return render(request, "admin.html",admin_data)
@@ -538,7 +536,6 @@ def uname_gatepass(request):
     
 
 def gatepass(request):
-    print(request.method,"--------------")
     if request.method == 'POST':
         admin_name = request.POST['admin_name']
         username = request.POST['username']
@@ -593,7 +590,6 @@ def gatepass_issue(request):
         gatepass_data.save()
         
         std_data = Student_data.objects.get(username=username)
-        std_data.status = "OUT"
         std_data.gate_pass_no = str(gatepass_data.id)
         std_data.save()
 
@@ -624,8 +620,8 @@ def gatepass_view(request):
         username = request.POST['student_username']
         try:
             std_data = Student_data.objects.get(username=username)
-            if std_data.status == "OUT":
-                pass_no = std_data.gate_pass_no
+            pass_no = std_data.gate_pass_no
+            if pass_no != "NO":
                 data = Gatepass.objects.get(id=int(pass_no))
                 if data.status == "OUT":
                     title = "Out OF Hostel"
@@ -724,12 +720,10 @@ def check_qr(request):
                 context = {'title':"Error on Scaning",'text':"Go to another Scan"}
                 return render(request, "error.html",{'data':context})
             else:
-                return  render(request, "guard_gatepaass.html",{'data':data,'title':f'Submit Data for {txt}',"submit":True})
+                return  render(request, "guard_gatepaass.html",{'data':data,'title':f'Submit Data for {txt}',"submit":True,'username':username})
         except:
             context = {'title':"QR Code Scan",'text':"Error! QR Code Not Match"}
             return render(request, "error.html",{'data':context})
-       
-            
     else:
         return render(request, "index.html")
     
@@ -749,6 +743,7 @@ def guard_gatepass(request):
             data.out_date = datetime.now().strftime("%d-%m-%Y")
             data.out_time = datetime.now().strftime("%I:%M-%p")
             data.status = "OUT"
+            data.outing_scan_by = username
             student_data.status = "OUT"
             
         elif status == "OUT":
@@ -758,10 +753,35 @@ def guard_gatepass(request):
             data.in_time = datetime.now().strftime("%I:%M-%p")
             data.hex_code = f'{data.hex_code}-done'
             data.status = "IN"
+            data.entry_scan_by = username
             student_data.status = "IN"
             student_data.gate_pass_no = "NO"
         student_data.save()
         data.save()
         return render(request, "guard_gatepaass.html",{'data':data,'title':title,"submit":False})
+    else:
+        return render(request, "index.html")
+
+
+
+
+
+def gatepass_history(request):
+    if request.method == 'POST':
+        data_list = []
+        username = request.POST['student_username']
+        data = Gatepass.objects.all()
+        for i in data:
+            if i.username == username:
+                data_list.append({
+                    'id': i.id,
+                    'out': f'{i.out_date} {i.out_time}',
+                    'in': f'{i.in_date} {i.in_time}',
+                    'region': i.region,
+                    'issue': i.issue_by 
+                })
+        
+        return render(request,"gatepass_history.html",{'data':data_list})
+        
     else:
         return render(request, "index.html")

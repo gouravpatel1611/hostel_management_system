@@ -153,7 +153,7 @@
 
                             <form class="row hide2 " method="post" action="/guard_gatepass">
                                 {% csrf_token %}
-                                <input type="hidden" name="username" value="{{data.username}}">
+                                <input type="hidden" name="username" value="{{username}}">
                                 <input type="hidden" name="status" value="{{data.status}}">
                                 <input type="hidden" name="hex_code" value="{{data.hex_code}}">
                                 <button type="submit" class="btn btn-success"> Submit </button>

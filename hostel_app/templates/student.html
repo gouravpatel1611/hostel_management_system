@@ -184,7 +184,7 @@ body {
             </a>
           </form>
           
-          <form class="card card-2" action="#" method="post"> {% csrf_token%}
+          <form class="card card-2" action="/gatepass_history" method="post"> {% csrf_token%}
             <input type="hidden" name="student_username" value= {{user}} />
             <a href="#" onclick="this.parentNode.submit()">
               <h2 class="card__title">Gate Pass History</h2>

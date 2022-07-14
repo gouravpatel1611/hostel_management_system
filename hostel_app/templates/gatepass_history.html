@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gatepass History</title>
+</head>
+
+<style>
+    .title {
+        padding: 1rem;
+        font-style: bold;
+        color: yellow;
+        background-color: #04AA6D;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        max-height: min-content;
+    }
+
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .table_box {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    tr {
+        margin-top: 5rem;
+        border: 2px solid rebeccapurple;
+
+    }
+
+    table {
+        font-family: sans-serif;
+        /* border-collapse: collapse; */
+    }
+
+    th {
+        background-color: #333;
+        color: #fff;
+        margin-top: 3rem;
+    }
+
+    th,
+    td {
+        padding: .8rem;
+        font-size: 1.4rem;
+    }
+
+    tbody {
+        background-color: #eee;
+        color: #555;
+    }
+
+
+    @media screen and (max-width: 600px) {
+        thead {
+            display: none;
+        }
+
+        td {
+            display: block;
+        }
+
+        td:first-child {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+        }
+
+        td:nth-child(2)::before {
+            content: "Outing Date & Time";
+        }
+
+        td:nth-child(3)::before {
+            content: "Entry Date & Time";
+        }
+
+        td:nth-child(4)::before {
+            content: "Region";
+        }
+
+        td:nth-child(5)::before {
+            content: "Issue BY";
+        }
+
+        td {
+            text-align: right;
+        }
+
+        td::before {
+            float: left;
+            margin-right: 3rem;
+            font-weight: bold;
+        }
+    }
+</style>
+
+
+
+<body>
+    <div class="title">
+        <h2>Gatepass History</h2>
+    </div>
+
+    <div class="table_box">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Outing Date & Time</th>
+                    <th>Entry Date & Time</th>
+                    <th>Region</th>
+                    <th>Issue BY</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{forloop.counter}}. Gatepass No. {{i.id}} </td>
+                    <td>{{i.out}}</td>
+                    <td>{{i.in}}</td>
+                    <td>{{i.region}}</td>
+                    <td>{{i.issue}}</td>
+                </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

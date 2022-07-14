@@ -31,6 +31,7 @@ urlpatterns = [
     path('gatepass', views.gatepass, name='gatepass'),
     path('gatepass_issue', views.gatepass_issue, name='gatepass_issue'),
     path('gatepass_view', views.gatepass_view, name='gatepass_view'),
+    path('gatepass_history', views.gatepass_history, name='gatepass_history'),
 
     path('forget_pass', views.forget_pass, name='forget_pass'),
     path('forgeted', views.forgeted, name='forgeted'),
