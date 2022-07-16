@@ -45,7 +45,12 @@ urlpatterns = [
     path('guard_gatepass', views.guard_gatepass, name='guard_gatepass'),
 
     path('check_qr', views.check_qr, name='check_qr'),
+    
+    
+    path('studentstatus', views.studentstatus, name='studentstatus'),
 
+    
+    
 
 
 ]

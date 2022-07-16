@@ -785,3 +785,18 @@ def gatepass_history(request):
         
     else:
         return render(request, "index.html")
+    
+    
+    
+    
+    
+    
+    
+def studentstatus(request):
+    if request.method == 'POST':
+        data_list = []
+        return render(request,"studentstatus.html",{'data':data_list})
+    else:
+        return render(request, "index.html")
+    
+    

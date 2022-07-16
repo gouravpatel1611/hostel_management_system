@@ -206,9 +206,14 @@ body {
           </form>
 
 
-          <a href="/studentstatus" class="card card-5">
-            <h2 class="card__title">Student Status</h2>
-          </a>
+
+          <form method="post" action="/studentstatus" class="card card-5">
+            {% csrf_token %}
+            <input type="hidden" name="admin_name" value= {{admin}} />
+            <a href="#" onclick="this.parentNode.submit()" >
+              <h2 class="card__title">Student Status</h2>
+            </a>
+          </form>
 
           <form method="post" action="/admin_profile" class="card card-1">
             {% csrf_token %}
