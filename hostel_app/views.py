@@ -8,6 +8,7 @@ import random
 from django.contrib import messages
 import qrcode
 import os
+import shutil
 # Create your views here.
 
 def password_gen():
@@ -115,8 +116,10 @@ def encode(data):
         
 def make_qr(id,data):
     img = qrcode.make(data)
-    name = "hostel_app\static\qr_code\\"+str(id)+".png"
+    name = f'{str(id)}.png'
     img.save(name)
+    to  = f'hostel_app/static/qr_code/{name}'
+    shutil.move(name, to)
 
 
 
@@ -248,10 +251,10 @@ def addstudent(request):
             std_pass = Student_pass(username=username,
                                     password=std_password)
             std_pass.save()
-            try:
-                    email_send(student_email, student_name, username, std_password,'Lcit Hostel Ragistation Sucsessfull')
-            except:
-                pass
+            # try:
+            #         email_send(student_email, student_name, username, std_password,'Lcit Hostel Ragistation Sucsessfull')
+            # except:
+            #     pass
             
             std = Student_pass.objects.all()
             id_no = 1
@@ -744,7 +747,12 @@ def guard_gatepass(request):
             data.out_time = datetime.now().strftime("%I:%M-%p")
             data.status = "OUT"
             data.outing_scan_by = username
-            student_data.status = "OUT"
+            if data.region == "Outing":
+                student_data.status = "OUT"
+            elif data.region == "Home":
+                student_data.status = "HOME"
+            elif  data.region == "Leave Hostel":
+                student_data.status = "LEAVE"
             
         elif status == "OUT":
             title = "Entry Sucsessfull !"
@@ -794,9 +802,41 @@ def gatepass_history(request):
     
 def studentstatus(request):
     if request.method == 'POST':
-        data_list = []
-        return render(request,"studentstatus.html",{'data':data_list})
+        student_data = Student_data.objects.all()
+
+        data_list = {
+            'totel':0,
+            'hostel':0,
+            'outing':0,
+            'home':0,
+            'leave':0
+        }
+
+
+        data_file1 = []
+        data_file2 = []
+        for data in student_data:
+            if data.status  == "IN":
+                data_list['hostel'] += 1
+                data_list['totel'] += 1
+                data_file1.append(data)
+            elif data.status == "OUT":
+                data_list['outing'] += 1
+                data_list['totel'] += 1
+                data_file1.append(data)
+            elif data.status == "HOME":
+                data_list['home'] += 1
+                data_list['totel'] += 1
+                data_file1.append(data)
+            elif data.status == "LEAVE":
+                data_list['leave'] += 1
+                data_file2.append(data)
+        
+
+
+
+        
+        return render(request,"studentstatus.html",{'data':data_file1 ,'data2':data_file2 ,'list':data_list })
     else:
         return render(request, "index.html")
-    
     
