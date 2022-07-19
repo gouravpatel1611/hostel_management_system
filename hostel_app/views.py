@@ -753,6 +753,12 @@ def guard_gatepass(request):
                 student_data.status = "HOME"
             elif  data.region == "Leave Hostel":
                 student_data.status = "LEAVE"
+                std_pass = Student_pass.objects.get(username=student_data.username)
+                std_pass.delete()
+                student_data.username += "-leave"
+                
+
+
             
         elif status == "OUT":
             title = "Entry Sucsessfull !"
